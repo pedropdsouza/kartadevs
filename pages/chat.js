@@ -70,7 +70,7 @@ export default function ChatPage() {
                 <Box
                     styleSheet={{
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        backgroundImage: `url(https://images.pexels.com/photos/109669/pexels-photo-109669.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260)`,
+                        backgroundImage: `url(https://images.pexels.com/photos/7862508/pexels-photo-7862508.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260)`,
                         backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
                         color: appConfig.theme.colors.neutrals['000']
                     }}

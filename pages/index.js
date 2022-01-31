@@ -29,7 +29,7 @@ export default function PaginaInicial() {
                 styleSheet={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     backgroundColor: appConfig.theme.colors.primary[500],
-                    backgroundImage: 'url(https://images.pexels.com/photos/269140/pexels-photo-269140.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260)',
+                    backgroundImage: 'url(https://images.pexels.com/photos/9072394/pexels-photo-9072394.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260)',
                     backgroundRepeat: 'no-repeat', backgroundSize: 'cover'
                 }}
             >
@@ -63,7 +63,7 @@ export default function PaginaInicial() {
                         width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
                         }}
             >
-                        <Title tag="h2">Não sabe o que assistir? Peça uma indicação.</Title>
+                        <Title tag="h2">Kartadevs, o recreio.</Title>
                         <Text variant="body3" styleSheet={{ marginBottom: '32px', marginTop: '5px', color: appConfig.theme.colors.neutrals[300] }}>
                             {appConfig.name}
                         </Text>                      
