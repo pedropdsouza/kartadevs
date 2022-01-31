@@ -19,6 +19,7 @@ function Title(props) {
     );
 }
 
+
 export default function PaginaInicial() {
     const [username, setUsername] = React.useState('pedropdsouza');
     const roteamento = useRouter();
@@ -47,8 +48,12 @@ export default function PaginaInicial() {
                     borderRadius: '5px', padding: '32px', margin: '16px',
                     boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
                     backgroundColor: appConfig.theme.colors.neutrals[888],
+                    
                     }}
+      
             >
+              
+
                     {/* Formulário */}
             <Box
                     as="form"
@@ -62,8 +67,10 @@ export default function PaginaInicial() {
                         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                         width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
                         }}
+                        
             >
-                        <Title tag="h2">Kartadevs, o recreio.</Title>
+                        <Title tag="h2">Kartadevs</Title>
+                          
                         <Text variant="body3" styleSheet={{ marginBottom: '32px', marginTop: '5px', color: appConfig.theme.colors.neutrals[300] }}>
                             {appConfig.name}
                         </Text>                      

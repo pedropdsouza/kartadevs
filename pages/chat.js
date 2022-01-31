@@ -17,6 +17,7 @@ function escutaMensagensEmTempoReal(adicionaMensagem) {
         })
         .subscribe();
 }
+
 export default function ChatPage() {
 
     const roteamento = useRouter();
@@ -34,139 +35,143 @@ export default function ChatPage() {
                 setListaDeMensagens(data);
             });
 
-            const subscription = escutaMensagensEmTempoReal((novaMensagem) => {
-                console.log('Nova mensagem:', novaMensagem);
-                console.log('listaDeMensagens:', listaDeMensagens);
-                setListaDeMensagens((valorAtualDaLista) => {
-                    console.log('valorAtualDaLista:', valorAtualDaLista);
-                       return [
-                           novaMensagem,
-                           ...valorAtualDaLista,
-                        ]
-                    });
-                });
-                return () => {
-                    subscription.unsubscribe();
-                }
-         }, []);
-         function handleNovaMensagem(novaMensagem) {
-            const mensagem = {
-                //id: listaDeMensagens.length +1,
-                de: usuarioLogado,
-                texto: novaMensagem,
-            };
-            supabaseClient
-                .from('mensagens')
-                .insert([
-                    mensagem
-                ])
-                .then(({ data }) => {
-                    console.log('Criando mensagem ', data)
-                });
-                setMensagem('');
-            }
-        
-            return (
-                <Box
-                    styleSheet={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        backgroundImage: `url(https://images.pexels.com/photos/7862508/pexels-photo-7862508.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260)`,
-                        backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
-                        color: appConfig.theme.colors.neutrals['000']
-                    }}
-                >
-                    <Box
-             styleSheet={{
-                display: 'flex',
-                flexDirection: 'column',
-                flex: 1,
-                boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
-                borderRadius: '5px',
-                backgroundColor: appConfig.theme.colors.neutrals[700],
-                height: '75%',
-                maxWidth: '80%',
-                maxHeight: '95vh',
-                padding: '32px',
-            }}
-        >
+        const subscription = escutaMensagensEmTempoReal((novaMensagem) => {
+            console.log('Nova mensagem:', novaMensagem);
+            console.log('listaDeMensagens:', listaDeMensagens);
+            setListaDeMensagens((valorAtualDaLista) => {
+                console.log('valorAtualDaLista:', valorAtualDaLista);
+                return [
+                    novaMensagem,
+                    ...valorAtualDaLista,
+                ]
+            });
+        });
+        return () => {
+            subscription.unsubscribe();
+        }
+    }, []);
 
-     <Header />
+    function handleNovaMensagem(novaMensagem) {
+        const mensagem = {
+            //id: listaDeMensagens.length +1,
+            de: usuarioLogado,
+            texto: novaMensagem,
+        };
+        supabaseClient
+            .from('mensagens')
+            .insert([
+                mensagem
+            ])
+            .then(({ data }) => {
+                console.log('Criando mensagem ', data)
+            });
+        setMensagem('');
+    }
+
+    return (
         <Box
             styleSheet={{
-                position: 'relative',
-                display: 'flex',
-                flex: 1,
-                height: '80%',
-                backgroundColor: appConfig.theme.colors.neutrals[600],
-                flexDirection: 'column',
-                borderRadius: '5px',
-                padding: '16px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                backgroundImage: `url(https://images.pexels.com/photos/7862508/pexels-photo-7862508.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260)`,
+                backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
+                color: appConfig.theme.colors.neutrals['000']
             }}
         >
+            <Box
 
-            <MessageList mensagens={listaDeMensagens} />
-
-        <Box
-             as="form"
                 styleSheet={{
                     display: 'flex',
-                    alignItems: 'center',
+                    flexDirection: 'column',
+                    flex: 1,
+                    boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
+                    borderRadius: '5px',
+                    backgroundColor: appConfig.theme.colors.neutrals[700],
+                    height: '75%',
+                    maxWidth: '80%',
+                    maxHeight: '95vh',
+                    padding: '32px',
                 }}
-                
-                onSubmit={(infosDaMensagem) => {
+            >
 
-                    if (mensagem.length > 0) {
-                       infosDaMensagem.preventDefault();
-                       handleNovaMensagem(mensagem);
-                    } else {
-                       infosDaMensagem.preventDefault();
-                    }
-    
-                 }}
-             >
+                <Header />
+                <Box
+                    styleSheet={{
+                        position: 'relative',
+                        display: 'flex',
+                        flex: 1,
+                        height: '80%',
+                        backgroundColor: appConfig.theme.colors.neutrals[600],
+                        flexDirection: 'column',
+                        borderRadius: '5px',
+                        padding: '16px',
+                    }}
+                >
 
-<TextField
-                value={mensagem}
-                onChange={(event) => {
-                    const valor = event.target.value;
+                <MessageList mensagens={listaDeMensagens} />
+
+                <Box
+                    as="form"
+                    styleSheet={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+
+                    onSubmit={(infosDaMensagem) => {
+
+                        if (mensagem.length > 0) {
+                            infosDaMensagem.preventDefault();
+                            handleNovaMensagem(mensagem);
+                        } else {
+                            infosDaMensagem.preventDefault();
+                        }
+
+                    }}
+                >
+
+                <TextField
+                    value={mensagem}
+                    onChange={(event) => {
+                        const valor = event.target.value;
                         setMensagem(valor);
-                }}
-                onKeyPress={(event) => {
-                    if (event.key === 'Enter') {
-                        event.preventDefault();
-                        handleNovaMensagem(mensagem);
-                    }
-                }}
+                    }}
+                    onKeyPress={(event) => {
+                        if (event.key === 'Enter') {
+                            event.preventDefault();
+                            handleNovaMensagem(mensagem);
+                        }
+                    }}
                     placeholder="Insira sua mensagem aqui..."
-                        type="textarea"
-                        styleSheet={{
-                            width: '100%',
-                            border: '0',
-                            resize: 'none',
-                            borderRadius: '5px',
-                            padding: '6px 8px',
-                            backgroundColor: appConfig.theme.colors.neutrals[800],
-                            marginRight: '12px',
-                            color: appConfig.theme.colors.neutrals[200],
-                         }}
-                 />
-                        <Button
-                            type='submit'
-                            label='Enviar'
-                            styleSheet={{
-                                width: '120px',
-                                marginBottom: '5px',
-                            }}
-                            buttonColors={{
-                                contrastColor: appConfig.theme.colors.neutrals["000"],
-                                mainColor: appConfig.theme.colors.primary[500],
-                                mainColorLight: appConfig.theme.colors.primary[400],
-                                mainColorStrong: appConfig.theme.colors.primary[600],
-                            }}
-                        />
-                        <ButtonSendSticker 
+                    type="textarea"
+                    styleSheet={{
+                        width: '100%',
+                        border: '0',
+                        resize: 'none',
+                        borderRadius: '5px',
+                        padding: '6px 8px',
+                        backgroundColor: appConfig.theme.colors.neutrals[800],
+                        marginRight: '12px',
+                        color: appConfig.theme.colors.neutrals[200],
+                    }}
+                />
+
+                <Button
+                    type='submit'
+                    label='Enviar'
+                    styleSheet={{
+                        width: '120px',
+                        marginBottom: '5px',
+                    }}
+                    buttonColors={{
+                        contrastColor: appConfig.theme.colors.neutrals["000"],
+                        mainColor: appConfig.theme.colors.primary[500],
+                        mainColorLight: appConfig.theme.colors.primary[400],
+                        mainColorStrong: appConfig.theme.colors.primary[600],
+                    }}
+                />
+
+                        <ButtonSendSticker
                             onStickerClick={(sticker) => {
-                                handleNovaMensagem(':sticker: ' + sticker)
+                                handleNovaMensagem(':sticker:' + sticker)
                             }}
                         />
                     </Box>
@@ -175,6 +180,7 @@ export default function ChatPage() {
         </Box>
     )
 }
+
 function Header() {
     return (
         <>
@@ -248,7 +254,7 @@ function MessageList(props) {
                                 {(new Date().toLocaleDateString())}
                             </Text>
                         </Box>
-                       
+
                         {mensagem.texto.startsWith(':sticker:')
                             ? (
                                 <Image src={mensagem.texto.replace(':sticker:', '')} />
