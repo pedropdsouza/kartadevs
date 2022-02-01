@@ -4,26 +4,21 @@ import { useRouter } from 'next/router';
 import { createClient } from '@supabase/supabase-js'
 import { ButtonSendSticker } from '../src/components/ButtonSendSticker'
 import React from 'react';
+import ListeningChat from '../src/components/ChatLive';
+import Header from '../src/components/ChatHeader';
 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzUwMDg1NywiZXhwIjoxOTU5MDc2ODU3fQ.puCwUoHAzb-Ybk4OezivPMFg8iQmnthmbrZJ01RWnn8'
 const SUPABASE_URL = 'https://mynqwberlcfnasgvugca.supabase.co'
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-function escutaMensagensEmTempoReal(adicionaMensagem) {
-    return supabaseClient
-        .from('mensagens')
-        .on('INSERT', (respostaLive) => {
-            adicionaMensagem(respostaLive.new);
-        })
-        .subscribe();
-}
+<ListeningChat />
 
 export default function ChatPage() {
 
     const roteamento = useRouter();
     const usuarioLogado = roteamento.query.username;
-    const [mensagem, setMensagem] = React.useState('');
-    const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
+    const [message, setMessage] = React.useState('');
+    const [PostList, setPostList] = React.useState([]);
 
     React.useEffect(() => {
         supabaseClient
@@ -32,16 +27,16 @@ export default function ChatPage() {
             .order('id', { ascending: false })
             .then(({ data }) => {
                 //console.log('Dados da consulta:', data);
-                setListaDeMensagens(data);
+                setPostList(data);
             });
 
-        const subscription = escutaMensagensEmTempoReal((novaMensagem) => {
-            console.log('Nova mensagem:', novaMensagem);
-            console.log('listaDeMensagens:', listaDeMensagens);
-            setListaDeMensagens((valorAtualDaLista) => {
+        const subscription = ListeningChat((newMessage) => {
+            console.log('Nova mensagem:', newMessage);
+            console.log('listaDeMensagens:', PostList);
+            setPostList((valorAtualDaLista) => {
                 console.log('valorAtualDaLista:', valorAtualDaLista);
                 return [
-                    novaMensagem,
+                    newMessage,
                     ...valorAtualDaLista,
                 ]
             });
@@ -51,21 +46,21 @@ export default function ChatPage() {
         }
     }, []);
 
-    function handleNovaMensagem(novaMensagem) {
-        const mensagem = {
+    function handleNewMessage(newMessage) {
+        const message = {
             //id: listaDeMensagens.length +1,
             de: usuarioLogado,
-            texto: novaMensagem,
+            texto: newMessage,
         };
         supabaseClient
             .from('mensagens')
             .insert([
-                mensagem
+                message
             ])
             .then(({ data }) => {
                 console.log('Criando mensagem ', data)
             });
-        setMensagem('');
+        setMessage('');
     }
 
     return (
@@ -107,7 +102,7 @@ export default function ChatPage() {
                     }}
                 >
 
-                <MessageList mensagens={listaDeMensagens} />
+                <MessageList mensagens={PostList} />
 
                 <Box
                     as="form"
@@ -118,9 +113,9 @@ export default function ChatPage() {
 
                     onSubmit={(infosDaMensagem) => {
 
-                        if (mensagem.length > 0) {
+                        if (message.length > 0) {
                             infosDaMensagem.preventDefault();
-                            handleNovaMensagem(mensagem);
+                            handleNewMessage(message);
                         } else {
                             infosDaMensagem.preventDefault();
                         }
@@ -129,15 +124,15 @@ export default function ChatPage() {
                 >
 
                 <TextField
-                    value={mensagem}
+                    value={message}
                     onChange={(event) => {
                         const valor = event.target.value;
-                        setMensagem(valor);
+                        setMessage(valor);
                     }}
                     onKeyPress={(event) => {
                         if (event.key === 'Enter') {
                             event.preventDefault();
-                            handleNovaMensagem(mensagem);
+                            handleNewMessage(message);
                         }
                     }}
                     placeholder="Insira sua mensagem aqui..."
@@ -171,7 +166,7 @@ export default function ChatPage() {
 
                         <ButtonSendSticker
                             onStickerClick={(sticker) => {
-                                handleNovaMensagem(':sticker:' + sticker)
+                                handleNewMessage(':sticker:' + sticker)
                             }}
                         />
                     </Box>
@@ -181,23 +176,8 @@ export default function ChatPage() {
     )
 }
 
-function Header() {
-    return (
-        <>
-            <Box styleSheet={{ width: '100%', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
-                <Text variant='heading5'>
-                    Chat
-                </Text>
-                <Button
-                    variant='tertiary'
-                    colorVariant='neutral'
-                    label='Logout'
-                    href="/"
-                />
-            </Box>
-        </>
-    )
-}
+<Header />
+
 function MessageList(props) {
     return (
         <Box
@@ -211,10 +191,10 @@ function MessageList(props) {
                 marginBottom: '16px',
             }}
         >
-            {props.mensagens.map((mensagem) => {
+            {props.mensagens.map((message) => {
                 return (
                     <Text
-                        key={mensagem.id}
+                        key={message.id}
                         tag="li"
                         styleSheet={{
                             borderRadius: '5px',
@@ -238,10 +218,10 @@ function MessageList(props) {
                                     display: 'inline-block',
                                     marginRight: '8px',
                                 }}
-                                src={`https://github.com/${mensagem.de}.png`}
+                                src={`https://github.com/${message.de}.png`}
                             />
                             <Text tag="strong">
-                                {mensagem.de}
+                                {message.de}
                             </Text>
                             <Text
                                 styleSheet={{
@@ -255,12 +235,12 @@ function MessageList(props) {
                             </Text>
                         </Box>
 
-                        {mensagem.texto.startsWith(':sticker:')
+                        {message.texto.startsWith(':sticker:')
                             ? (
-                                <Image src={mensagem.texto.replace(':sticker:', '')} />
+                                <Image src={message.texto.replace(':sticker:', '')} />
                             )
                             : (
-                                mensagem.texto
+                                message.texto
                             )}
                     </Text>
                 );
