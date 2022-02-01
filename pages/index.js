@@ -2,23 +2,9 @@ import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import React from 'react';
 import { useRouter } from 'next/router';
 import appConfig from './config.json';
+import Title from '../src/components/Title';
 
-function Title(props) {
-    const Tag = props.tag || 'h1';
-    return (
-        <>
-            <Tag>{props.children}</Tag>
-            <style jsx>{`
-            ${Tag} {
-                color: ${appConfig.theme.colors.neutrals['777']};
-                font-size: 24px;
-                font-weight: 600;
-            }
-            `}</style>
-        </>
-    );
-}
-
+<Title />
 
 export default function PaginaInicial() {
     const [username, setUsername] = React.useState('pedropdsouza');
@@ -26,7 +12,9 @@ export default function PaginaInicial() {
 
     return (
         <>
+
             <Box
+            
                 styleSheet={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     backgroundColor: appConfig.theme.colors.primary[500],
