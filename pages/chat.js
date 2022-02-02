@@ -193,36 +193,40 @@ function MessageList(props) {
         >
             {props.mensagens.map((message) => {
                 return (
+                    
                     <Text
                         key={message.id}
                         tag="li"
                         styleSheet={{
                             borderRadius: '5px',
                             padding: '6px',
-                            marginBottom: '12px',
                             hover: {
                                 backgroundColor: appConfig.theme.colors.neutrals[700],
                             }
                         }}
                     >
-                        <Box
+                        <Image
+                        styleSheet={{
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '50%',
+                            display: 'inline-block',
+                            marginRight: '8px',
+                        }}
+                        src={`https://github.com/${message.de}.png`}
+                    />
+                            <Text
                             styleSheet={{
-                                marginBottom: '8px',
+                                
+                                color: appConfig.theme.colors.primary[500],
                             }}
-                        >
-                            <Image
-                                styleSheet={{
-                                    width: '20px',
-                                    height: '20px',
-                                    borderRadius: '50%',
-                                    display: 'inline-block',
-                                    marginRight: '8px',
-                                }}
-                                src={`https://github.com/${message.de}.png`}
-                            />
-                            <Text tag="strong">
-                                {message.de}
+                            >
+
+                                {message.de} :
+
                             </Text>
+
+         
                             <Text
                                 styleSheet={{
                                     fontSize: '10px',
@@ -233,18 +237,30 @@ function MessageList(props) {
                             >
                                 {(new Date().toLocaleDateString())}
                             </Text>
-                        </Box>
-
-                        {message.texto.startsWith(':sticker:')
+                               
+                            <Text
+                            styleSheet={{
+                                marginTop: '10px',
+                                marginBottom: '5px'
+                            }}
+                        >
+                            {message.texto.startsWith(':sticker:')
                             ? (
                                 <Image src={message.texto.replace(':sticker:', '')} />
                             )
                             : (
                                 message.texto
                             )}
-                    </Text>
+                        </Text>  
+                        
+                    </Text> 
+                
+                    
+                   
                 );
+                
             })}
+            
         </Box>
     )
 }
